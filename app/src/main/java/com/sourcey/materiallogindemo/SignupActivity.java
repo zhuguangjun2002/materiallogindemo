@@ -64,7 +64,8 @@ public class SignupActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
+        //progressDialog.setMessage("Creating Account...");
+        progressDialog.setMessage("创建账户...");
         progressDialog.show();
 
         String name = _nameText.getText().toString();
@@ -96,7 +97,9 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        // "Login failed",should be "Signup failed"
+        Toast.makeText(getBaseContext(), "注册失败", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }
@@ -112,14 +115,16 @@ public class SignupActivity extends AppCompatActivity {
         String reEnterPassword = _reEnterPasswordText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
+            //_nameText.setError("at least 3 characters");
+            _nameText.setError("最少三个字符");
             valid = false;
         } else {
             _nameText.setError(null);
         }
 
         if (address.isEmpty()) {
-            _addressText.setError("Enter Valid Address");
+            //_addressText.setError("Enter Valid Address");
+            _addressText.setError("请输入有效的地址");
             valid = false;
         } else {
             _addressText.setError(null);
@@ -127,28 +132,32 @@ public class SignupActivity extends AppCompatActivity {
 
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            //_emailText.setError("enter a valid email address");
+            _emailText.setError("输入一个有效的邮箱地址");
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
-        if (mobile.isEmpty() || mobile.length()!=10) {
-            _mobileText.setError("Enter Valid Mobile Number");
+        if (mobile.isEmpty() || mobile.length()!=11) {
+            //_mobileText.setError("Enter Valid Mobile Number");
+            _mobileText.setError("请输入有效的手机号码：11位数字");
             valid = false;
         } else {
             _mobileText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            //_passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError("输入4-10个字母或者数字");
             valid = false;
         } else {
             _passwordText.setError(null);
         }
 
         if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 10 || !(reEnterPassword.equals(password))) {
-            _reEnterPasswordText.setError("Password Do not match");
+            //_reEnterPasswordText.setError("Password Do not match");
+            _reEnterPasswordText.setError("密码不匹配");
             valid = false;
         } else {
             _reEnterPasswordText.setError(null);

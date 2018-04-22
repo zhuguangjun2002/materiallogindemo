@@ -64,7 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
+        //progressDialog.setMessage("Authenticating...");
+        progressDialog.setMessage("正在身份验证...");
         progressDialog.show();
 
         String email = _emailText.getText().toString();
@@ -108,7 +109,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "登录失败", Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
     }
@@ -120,14 +122,16 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+//            _emailText.setError("enter a valid email address");
+            _emailText.setError("请输入一个有效的邮箱地址");
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+//            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError("4-10个数字或字母");
             valid = false;
         } else {
             _passwordText.setError(null);
