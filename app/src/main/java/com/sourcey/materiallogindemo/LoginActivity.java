@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
-    @BindView(R.id.input_email) EditText _emailText;
+    @BindView(R.id.input_name) EditText _nameText;
     @BindView(R.id.input_password) EditText _passwordText;
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup) TextView _signupLink;
@@ -83,13 +83,13 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("正在身份验证...");
         progressDialog.show();
 
-        final String email = _emailText.getText().toString();
+        final String username = _nameText.getText().toString();
         final String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
 
 
-        final Call<User> call = userClient.login(email,password);
+        final Call<User> call = userClient.login(username,password);
 
         // 在主线程里，必须使用`异步调用方式`
         call.enqueue(new Callback<User>() {
@@ -195,16 +195,17 @@ public class LoginActivity extends AppCompatActivity {
     public boolean validate() {
         boolean valid = true;
 
-        String email = _emailText.getText().toString();
+        String name = _nameText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            //_emailText.setError("enter a valid email address");
-            _emailText.setError("请输入一个有效的邮箱地址");
+        if (name.isEmpty() || name.length() < 3) {
+            //_nameText.setError("at least 3 characters");
+            _nameText.setError("用户名，最少三个字符");
             valid = false;
         } else {
-            _emailText.setError(null);
+            _nameText.setError(null);
         }
+
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
             //_passwordText.setError("between 4 and 10 alphanumeric characters");
