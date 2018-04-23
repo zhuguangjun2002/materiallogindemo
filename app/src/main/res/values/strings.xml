@@ -3,4 +3,12 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="MAIKATOR_MAPBOX_STREETS" translatable="false">"mapbox://styles/zhuguangjun2002/cjetcoeib28ox2smaxxv6ma3e"</string>
+
+    <!-- Access Token -->
+    <string name="access_token" translatable="false">pk.eyJ1Ijoiemh1Z3VhbmdqdW4yMDAyIiwiYSI6ImNqYzFkNGl2ZjAwa2oyeW4yMGh0cTAxcHAifQ.bbY8ctOlYyb77S4P0VZ25A</string>
+
+
+
 </resources>
