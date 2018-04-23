@@ -12,8 +12,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sourcey.materiallogindemo.model.User;
+import com.sourcey.materiallogindemo.service.ServiceGenerator;
+import com.sourcey.materiallogindemo.service.UserClient;
+
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -23,7 +32,13 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.input_password) EditText _passwordText;
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup) TextView _signupLink;
-    
+
+    // call for API
+    UserClient userClient = ServiceGenerator.createService(UserClient.class);
+    private static String token;
+    private boolean authticated=false;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,20 +83,82 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("正在身份验证...");
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final String email = _emailText.getText().toString();
+        final String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
+
+        final Call<User> call = userClient.login(email,password);
+
+        // 在主线程里，必须使用`异步调用方式`
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    // if you want to get <User> object, you just call `response.body()` to get it.
+                    token =response.body().getToken();
+                    if(token != null) {
+                        //Toast.makeText(LoginActivity.this, token, Toast.LENGTH_SHORT).show();
+                        // 获取到token,表示登录成功
+                        new android.os.Handler().postDelayed(
+                                new Runnable() {
+                                    public void run() {
+                                        // On complete call either onLoginSuccess or onLoginFailed
+                                        onLoginSuccess();
+                                        //onLoginFailed();
+                                        progressDialog.dismiss();
+                                    }
+                                }, 3000);
                     }
-                }, 3000);
+                    else{
+                        // 获取到token,`token`为空，表示登录失败；这种可能性极小。
+                        //Toast.makeText(LoginActivity.this, "token is empty!", Toast.LENGTH_SHORT).show();
+                        new android.os.Handler().postDelayed(
+                                new Runnable() {
+                                    public void run() {
+                                        // On complete call either onLoginSuccess or onLoginFailed
+                                        //onLoginSuccess();
+                                        onLoginFailed();
+                                        progressDialog.dismiss();
+                                    }
+                                }, 3000);
+                    }
+                }else {
+                    // 登录账号不对
+                    //Toast.makeText(LoginActivity.this, "login not correct :(", Toast.LENGTH_SHORT).show();
+                    new android.os.Handler().postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    // On complete call either onLoginSuccess or onLoginFailed
+                                    Toast.makeText(getBaseContext(), "用户名或密码不正确", Toast.LENGTH_LONG).show();
+                                    //onLoginSuccess();
+                                    onLoginFailed();
+                                    progressDialog.dismiss();
+                                }
+                            }, 3000);
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "error login-- :(", Toast.LENGTH_SHORT).show();
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                // On complete call either onLoginSuccess or onLoginFailed
+                                //onLoginSuccess();
+                                onLoginFailed();
+                                progressDialog.dismiss();
+                            }
+                        }, 3000);
+
+            }
+        });
+
+
     }
 
 
@@ -109,7 +186,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-//        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
         Toast.makeText(getBaseContext(), "登录失败", Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
@@ -122,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-//            _emailText.setError("enter a valid email address");
+            //_emailText.setError("enter a valid email address");
             _emailText.setError("请输入一个有效的邮箱地址");
             valid = false;
         } else {
@@ -130,7 +207,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-//            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            //_passwordText.setError("between 4 and 10 alphanumeric characters");
             _passwordText.setError("4-10个数字或字母");
             valid = false;
         } else {
@@ -139,4 +216,6 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
+
+
 }
