@@ -5,7 +5,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
     private static Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.106:8000")
+            //.baseUrl("http://192.168.1.106:8000")
+            .baseUrl("http://www.maikator.com:8080")
             .addConverterFactory(GsonConverterFactory.create());
 
     private static Retrofit retrofit = builder.build();
